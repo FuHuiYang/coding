@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false">
+
+
+    <context:component-scan base-package="com.cc.service"/>
+
+    <bean id="facadeExceptionInAdvice" class="com.cc.service.config.ExceptionMapper"/>
+    <bean
+            class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator"
+            p:interceptorNames="facadeExceptionInAdvice" p:optimize="false">
+        <property name="beanNames">
+            <list>
+                <value>*Facade</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"/>
+
+    <bean class="com.cc.service.factory.LoginFactory" init-method="initInvokeMethod">
+        <property name="loginFacadeMap">
+            <map>
+                <entry key="001" value-ref="QQLoginServiceImp"/>
+                <entry key="002" value-ref="WXLoginServiceImp"/>
+            </map>
+        </property>
+    </bean>
+    <!--<bean id="parentChildMap" class="java.util.HashMap">-->
+        <!--<constructor-arg>-->
+            <!--<map>-->
+                <!--<entry key="C5200" value-ref="huaRunTrustTemplateImpl" />-->
+                <!--<entry key="C5300" value-ref="guangDaTrustTemplateImpl" />-->
+            <!--</map>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+
+</beans>
